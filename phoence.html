@@ -1,0 +1,369 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Phoence - 次世代住宅FAシステム 事業計画</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;700&display=swap');
+        
+        body {
+            font-family: 'Noto+Sans+JP', sans-serif;
+            background-color: #f8f9fa;
+            color: #333;
+        }
+
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+            height: 300px;
+            max-height: 400px;
+        }
+
+        .canvas-card {
+            transition: all 0.3s ease;
+            cursor: pointer;
+            border: 1px solid #e5e7eb;
+        }
+
+        .canvas-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+            border-color: #3b82f6;
+        }
+
+        .active-tab {
+            border-bottom: 3px solid #3b82f6;
+            color: #3b82f6;
+            font-weight: bold;
+        }
+
+        .glass-morphism {
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+        }
+    </style>
+</head>
+<body class="bg-slate-50">
+
+    <!-- Chosen Palette: Modern Industrial Harmony (Base: Slate-50, Primary: Keyence Blue inspired #004da1, Accent: Goldish Orange) -->
+    <!-- Application Structure Plan: 
+        1. Hero Section: 事業の核心（HMWとビジョン）を提示。
+        2. Interactive Lean Canvas: グリッドレイアウトで全体像を俯瞰し、クリックで各項目の詳細を表示。
+        3. Financial & Metrics Dashboard: 収益モデルと主要指標をChart.jsで視覚化。
+        4. Risk & Validation Road Map: 最も危ない前提と今後の検証プロセスをステップ表示。
+        この構造により、静的なレポートを「動的な事業シミュレーション」のように感じさせ、理解を深めます。
+    -->
+    <!-- Visualization & Content Choices: 
+        - Lean Canvas -> Interactive Grid -> 情報の網羅性と関係性の把握
+        - Revenue Flow -> Pie Chart -> 収益構造（初期vs継続）の比率可視化
+        - Key Metrics -> Bar Chart -> 導入目標の推移
+        - Risk Analysis -> Highlight Boxes -> 優先順位の明確化
+        - Confirming NO SVG/Mermaid. All graphics use Canvas or Tailwind-styled HTML.
+    -->
+    <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
+
+    <nav class="sticky top-0 z-50 glass-morphism py-4 px-6 mb-8 shadow-sm">
+        <div class="max-w-7xl mx-auto flex justify-between items-center">
+            <div class="flex items-center space-x-2">
+                <div class="w-8 h-8 bg-blue-700 rounded-lg flex items-center justify-center text-white font-bold">Ph</div>
+                <span class="text-xl font-bold tracking-tighter text-blue-900">Phoence <span class="text-sm font-normal text-gray-500">by Keyence</span></span>
+            </div>
+            <div class="hidden md:flex space-x-8 text-sm font-medium">
+                <a href="#vision" class="hover:text-blue-600 transition">ビジョン</a>
+                <a href="#canvas" class="hover:text-blue-600 transition">リーンキャンバス</a>
+                <a href="#data" class="hover:text-blue-600 transition">データ・収益</a>
+                <a href="#validation" class="hover:text-blue-600 transition">検証計画</a>
+            </div>
+            <div class="text-xs text-right text-gray-400">
+                P1クラス 4班
+            </div>
+        </div>
+    </nav>
+
+    <main class="max-w-7xl mx-auto px-4 pb-20">
+        
+        <!-- Hero Section -->
+        <section id="vision" class="mb-16 text-center py-12">
+            <h1 class="text-4xl md:text-5xl font-extrabold text-slate-900 mb-6 leading-tight">
+                家事の「最後の聖域」を、<br><span class="text-blue-700">FA技術で完全自動化する。</span>
+            </h1>
+            <p class="text-lg text-slate-600 max-w-3xl mx-auto mb-8 leading-relaxed">
+                洗濯物をカゴに入れるだけ。たたむ・仕分け・収納までを完結させる<br class="hidden md:block">
+                住宅ビルトイン型「スマートクローゼット」システム。
+            </p>
+            <div class="bg-blue-50 border-l-4 border-blue-500 p-6 max-w-2xl mx-auto rounded-r-lg">
+                <p class="text-sm font-bold text-blue-800 mb-1 uppercase tracking-wider italic">Most Important HMW</p>
+                <p class="text-blue-900 font-medium">「どうすれば、住宅に住む人の家事での負担を減らし、楽に生活を送ってもらえるようになるか。」</p>
+            </div>
+        </section>
+
+        <!-- Section Intro: Lean Canvas -->
+        <div class="mb-8">
+            <h2 class="text-2xl font-bold text-slate-800">Lean Canvas 1.0</h2>
+            <p class="text-slate-500 text-sm mt-2">事業モデルの全容をインタラクティブに確認できます。各カードをクリックして詳細を読み解いてください。</p>
+        </div>
+
+        <!-- Lean Canvas Grid -->
+        <section id="canvas" class="grid grid-cols-1 md:grid-cols-5 gap-4 mb-20">
+            <!-- 2. Problem -->
+            <div class="md:col-span-1 md:row-span-2 flex flex-col gap-4">
+                <div class="canvas-card bg-white p-5 rounded-xl h-full shadow-sm" onclick="showDetail('課題', '1. 洗濯乾燥後の「たたむ・運ぶ・収納する」作業のボトルネック化<br>2. 放置された衣類による居住空間の乱れ<br>3. 家族間での収納ルールの不一致による摩擦<br><br>【代替品】家事代行、手動折りたたみ、ハンガー掛け移行')">
+                    <span class="text-xs font-bold text-blue-500">2. 課題</span>
+                    <h3 class="font-bold text-slate-800 mt-1 mb-2">解決すべき苦痛</h3>
+                    <p class="text-xs text-slate-600 line-clamp-4">洗濯乾燥機で「洗う・乾かす」は自動化されたが、その後の「たたむ・収納する」が最大の時間的負担として残っている。</p>
+                </div>
+            </div>
+
+            <!-- 4. Solution & 3. UVP -->
+            <div class="md:col-span-1 md:row-span-2 flex flex-col gap-4">
+                <div class="canvas-card bg-white p-5 rounded-xl h-1/2 shadow-sm" onclick="showDetail('解決策', '1. 高精度マルチセンシング：衣類の種類・素材を瞬時に識別<br>2. ソフト把持ロボット：シワなく最適な形に折りたたみ<br>3. 自動パレタイズ：クローゼット内の定位置へ自動搬送')">
+                    <span class="text-xs font-bold text-blue-500">4. 解決策</span>
+                    <h3 class="font-bold text-slate-800 mt-1 mb-2">FA技術の転用</h3>
+                    <p class="text-xs text-slate-600 line-clamp-3">キーエンスのビジョンシステムとロボット制御を用いた全自動折りたたみ・収納機構。</p>
+                </div>
+                <div class="canvas-card bg-blue-700 p-5 rounded-xl h-1/2 shadow-sm text-white" onclick="showDetail('独自の価値提案', '「カゴに入れるだけ。たたむ・仕分け・収納までを完全自動化し、毎日の衣類ケアから解放する、家庭内FAシステム」<br><br>【ハイレベルコンセプト】<br>衣服のプライベート・パレタイジングシステム')">
+                    <span class="text-xs font-bold text-blue-200">3. 独自の価値提案</span>
+                    <h3 class="font-bold mt-1 mb-2">圧倒的タイパ</h3>
+                    <p class="text-xs text-blue-100 line-clamp-3">住宅に工場レベルの自動化を。家事時間をゼロにする「究極のスマートホーム」体験。</p>
+                </div>
+            </div>
+
+            <!-- 9. Unfair Advantage -->
+            <div class="md:col-span-1 md:row-span-2 flex flex-col gap-4">
+                <div class="canvas-card bg-white p-5 rounded-xl h-full shadow-sm" onclick="showDetail('圧倒的な優位性', '・キーエンスの既存技術（Vision、ロボット制御、パレタイズ）の独占的転用<br>・「人感安全エリアスキャナ」による住宅用安全基準のクリア<br>・家電メーカーには真似できない産業用レベルの高耐久・高精度')">
+                    <span class="text-xs font-bold text-blue-500">9. 圧倒的優位性</span>
+                    <h3 class="font-bold text-slate-800 mt-1 mb-2">技術資産の壁</h3>
+                    <p class="text-xs text-slate-600 line-clamp-4">産業界で実証済みの画像認識と安全制御技術。一般家電メーカーが模倣できない精度と信頼性。</p>
+                </div>
+            </div>
+
+            <!-- 5. Channels & 1. Customer -->
+            <div class="md:col-span-1 md:row-span-2 flex flex-col gap-4">
+                <div class="canvas-card bg-white p-5 rounded-xl h-1/2 shadow-sm" onclick="showDetail('チャネル', '・B2B2C：大手ハウスメーカー（積水ハウス等）との協業<br>・高級リノベーション市場<br>・ブランドショールーム展示')">
+                    <span class="text-xs font-bold text-blue-500">5. チャネル</span>
+                    <h3 class="font-bold text-slate-800 mt-1 mb-2">住設ルート</h3>
+                    <p class="text-xs text-slate-600 line-clamp-3">新築時の標準オプション。ハウスメーカーを窓口としたB2B2C展開。</p>
+                </div>
+                <div class="canvas-card bg-white p-5 rounded-xl h-1/2 shadow-sm" onclick="showDetail('顧客セグメント', '・都心の高所得層、パワーカップル<br>・タイパ重視の共働き世帯<br><br>【アーリーアダプター】<br>大手メーカーのスマートホーム購入検討者、テック親和層')">
+                    <span class="text-xs font-bold text-blue-500">1. 顧客セグメント</span>
+                    <h3 class="font-bold text-slate-800 mt-1 mb-2">高所得タイパ層</h3>
+                    <p class="text-xs text-slate-600 line-clamp-3">都心マンションを購入する、時間を最も価値ある資源と考える層。</p>
+                </div>
+            </div>
+
+            <!-- Side Metrics/Revenue -->
+            <div class="md:col-span-1 md:row-span-2 flex flex-col gap-4">
+                <div class="canvas-card bg-slate-100 p-5 rounded-xl h-full shadow-sm border-dashed border-2" onclick="showDetail('主要指標/コスト/収益', '【指標】導入件数、MAU、削減時間、エラー率<br>【コスト】R&D、ダウンサイジング、設置工事網<br>【収益】初期150-300万 + 月額保守サブスク')">
+                    <span class="text-xs font-bold text-slate-500">6, 7, 8. 構造・指標</span>
+                    <h3 class="font-bold text-slate-800 mt-1 mb-2">ビジネス持続性</h3>
+                    <p class="text-xs text-slate-600 italic">クリックして詳細な財務構造とKPIを確認</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Detail Panel (Dynamic) -->
+        <div id="detail-panel" class="hidden fixed inset-0 bg-black bg-opacity-50 z-[100] flex items-center justify-center p-4">
+            <div class="bg-white rounded-2xl p-8 max-w-lg w-full shadow-2xl relative">
+                <button onclick="closeDetail()" class="absolute top-4 right-4 text-slate-400 hover:text-slate-600 text-2xl">&times;</button>
+                <div id="detail-content"></div>
+            </div>
+        </div>
+
+        <!-- Section Intro: Data & Revenue -->
+        <div class="mb-8 pt-10 border-t border-slate-200" id="data">
+            <h2 class="text-2xl font-bold text-slate-800">収益モデルとKPI予測</h2>
+            <p class="text-slate-500 text-sm mt-2">事業の成長エンジンと投資対効果を可視化します。</p>
+        </div>
+
+        <!-- Charts Section -->
+        <section class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-20">
+            <div class="bg-white p-8 rounded-2xl shadow-sm border border-slate-100">
+                <h3 class="text-lg font-bold text-slate-800 mb-6 flex items-center">
+                    <span class="w-2 h-6 bg-blue-600 rounded mr-3"></span>
+                    推定収益構造（1契約あたり）
+                </h3>
+                <div class="chart-container">
+                    <canvas id="revenueChart"></canvas>
+                </div>
+                <div class="mt-6 text-sm text-slate-600">
+                    <p class="mb-2"><strong>フロー収益:</strong> システム本体＋設置工事（150万〜300万円）</p>
+                    <p><strong>ストック収益:</strong> 保守メンテナンス＋クラウド管理（月額サブスクリプション）</p>
+                </div>
+            </div>
+
+            <div class="bg-white p-8 rounded-2xl shadow-sm border border-slate-100">
+                <h3 class="text-lg font-bold text-slate-800 mb-6 flex items-center">
+                    <span class="w-2 h-6 bg-orange-500 rounded mr-3"></span>
+                    重要品質指標（ターゲット）
+                </h3>
+                <div class="chart-container">
+                    <canvas id="kpiChart"></canvas>
+                </div>
+                <div class="mt-6 text-sm text-slate-600">
+                    <p>衣服のジャム率・誤認識率を極限まで下げることで、家事代行を超える信頼性を担保します。</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section Intro: Validation -->
+        <div class="mb-8 pt-10 border-t border-slate-200" id="validation">
+            <h2 class="text-2xl font-bold text-slate-800">リスクと検証ロードマップ</h2>
+            <p class="text-slate-500 text-sm mt-2">「最も危ない前提」をクリアし、事業化を確実にするためのステップです。</p>
+        </div>
+
+        <!-- Risk & Validation -->
+        <section class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-20">
+            <div class="lg:col-span-1 bg-red-50 p-8 rounded-2xl border border-red-100">
+                <h3 class="text-red-800 font-bold mb-4 flex items-center">
+                    <span class="mr-2">⚠️</span> 最も危ない前提 (Riskiest Assumption)
+                </h3>
+                <p class="text-red-900 text-sm leading-relaxed mb-4">
+                    「家庭内の極めて限られたスペース・予算において、多種多様な布製品（非剛体）を、故障なく、静音性と安全性を保ちながら自動処理できるか？」
+                </p>
+                <div class="text-xs text-red-700 bg-white p-4 rounded-lg border border-red-200">
+                    この仮説が崩れると、価格、性能、信頼性のすべてが破綻します。
+                </div>
+            </div>
+
+            <div class="lg:col-span-2 bg-white p-8 rounded-2xl shadow-sm border border-slate-100">
+                <h3 class="text-slate-800 font-bold mb-6">第10回：検証アクションプラン</h3>
+                <div class="space-y-6">
+                    <div class="flex items-start">
+                        <div class="w-8 h-8 bg-blue-100 text-blue-600 rounded-full flex items-center justify-center font-bold text-sm shrink-0 mt-1">1</div>
+                        <div class="ml-4">
+                            <h4 class="font-bold text-slate-800">技術的実現性と静音性の検証</h4>
+                            <p class="text-sm text-slate-600">プロトタイプ試作による衣服ハンドリング実験と、40dB以下の静音駆動構造のテスト。</p>
+                        </div>
+                    </div>
+                    <div class="flex items-start">
+                        <div class="w-8 h-8 bg-blue-100 text-blue-600 rounded-full flex items-center justify-center font-bold text-sm shrink-0 mt-1">2</div>
+                        <div class="ml-4">
+                            <h4 class="font-bold text-slate-800">安全機能の検証</h4>
+                            <p class="text-sm text-slate-600">キーエンス製セーフティレーザスキャナを用いた、家庭内事故ゼロを保証する安全規格の適合性確認。</p>
+                        </div>
+                    </div>
+                    <div class="flex items-start">
+                        <div class="w-8 h-8 bg-blue-100 text-blue-600 rounded-full flex items-center justify-center font-bold text-sm shrink-0 mt-1">3</div>
+                        <div class="ml-4">
+                            <h4 class="font-bold text-slate-800">顧客受容性と価格の検証</h4>
+                            <p class="text-sm text-slate-600">富裕層ターゲットへの3Dデモを用いたヒアリング。150万〜300万円の価格妥当性の確認。</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Footer / Role Comments -->
+        <footer class="bg-slate-900 rounded-3xl p-10 text-white">
+            <h3 class="text-xl font-bold mb-8 text-center">チーム・メンバー別アプローチ</h3>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <div class="border-l-2 border-blue-500 pl-4">
+                    <p class="text-xs text-blue-400 font-bold mb-1">事業統括 (PM)</p>
+                    <p class="text-sm text-slate-300">「B2B2Cの収益モデルを早期に確立し、先行者利益を最大化します。」</p>
+                </div>
+                <div class="border-l-2 border-blue-500 pl-4">
+                    <p class="text-xs text-blue-400 font-bold mb-1">技術戦略責任者</p>
+                    <p class="text-sm text-slate-300">「布製品の認識とハンドリングの安定性をプロトタイプで早期実証します。」</p>
+                </div>
+                <div class="border-l-2 border-blue-500 pl-4">
+                    <p class="text-xs text-blue-400 font-bold mb-1">顧客・市場責任者</p>
+                    <p class="text-sm text-slate-300">「説明書不要のUXを追求し、タイパ価値に対する顧客の納得度を検証します。」</p>
+                </div>
+                <div class="border-l-2 border-blue-500 pl-4">
+                    <p class="text-xs text-blue-400 font-bold mb-1">統制・PM責任者</p>
+                    <p class="text-sm text-slate-300">「住宅用安全規格のクリアと、開発スケジュールの厳格な管理を遂行します。」</p>
+                </div>
+                <div class="border-l-2 border-blue-500 pl-4">
+                    <p class="text-xs text-blue-400 font-bold mb-1">事業モデル責任者</p>
+                    <p class="text-sm text-slate-300">「衣服データを活用したアパレルAPI連携など、LTV最大化の基盤を作ります。」</p>
+                </div>
+            </div>
+            <div class="mt-12 pt-8 border-t border-slate-800 text-center text-slate-500 text-xs">
+                &copy; 2026 Phoence Project Team 4 - Keyence Strategic Business Development
+            </div>
+        </footer>
+
+    </main>
+
+    <script>
+        // Core Interaction Logic
+        function showDetail(title, content) {
+            const panel = document.getElementById('detail-panel');
+            const contentDiv = document.getElementById('detail-content');
+            contentDiv.innerHTML = `
+                <h2 class="text-2xl font-bold text-blue-900 mb-4">${title}</h2>
+                <div class="text-slate-700 leading-relaxed text-base space-y-4">
+                    ${content}
+                </div>
+                <button onclick="closeDetail()" class="mt-8 w-full bg-blue-700 text-white py-3 rounded-xl font-bold hover:bg-blue-800 transition">閉じる</button>
+            `;
+            panel.classList.remove('hidden');
+            panel.classList.add('flex');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeDetail() {
+            const panel = document.getElementById('detail-panel');
+            panel.classList.add('hidden');
+            panel.classList.remove('flex');
+            document.body.style.overflow = 'auto';
+        }
+
+        // Charts Initialization
+        window.onload = function() {
+            // Revenue Chart
+            const ctxRev = document.getElementById('revenueChart').getContext('2d');
+            new Chart(ctxRev, {
+                type: 'doughnut',
+                data: {
+                    labels: ['初期導入費 (Hardware)', 'メンテナンス (Stock)', 'クラウド利用料 (Service)'],
+                    datasets: [{
+                        data: [85, 10, 5],
+                        backgroundColor: ['#1d4ed8', '#fb923c', '#94a3b8'],
+                        borderWidth: 0
+                    }]
+                },
+                options: {
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { position: 'bottom', labels: { boxWidth: 12, font: { size: 11 } } }
+                    },
+                    cutout: '70%'
+                }
+            });
+
+            // KPI Chart
+            const ctxKpi = document.getElementById('kpiChart').getContext('2d');
+            new Chart(ctxKpi, {
+                type: 'bar',
+                data: {
+                    labels: ['衣服認識精度', '折りたたみ成功率', '安全検知反応速度', '静音性維持率'],
+                    datasets: [{
+                        label: 'Phoence目標値 (%)',
+                        data: [99.9, 99.5, 100, 95],
+                        backgroundColor: '#0f172a',
+                        borderRadius: 6
+                    }]
+                },
+                options: {
+                    maintainAspectRatio: false,
+                    scales: {
+                        y: { beginAtZero: true, max: 100, ticks: { callback: v => v + '%' } },
+                        x: { ticks: { font: { size: 10 } } }
+                    },
+                    plugins: {
+                        legend: { display: false }
+                    }
+                }
+            });
+        };
+    </script>
+</body>
+</html>
